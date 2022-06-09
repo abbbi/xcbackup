@@ -2,7 +2,7 @@
 
 Export/Backup all IGC files you have uploaded to DHV-XC
 
-![Alt text](xcbackup.jpg?raw=true "Screenshot")
+![Alt text](screenshot.jpg?raw=true "Screenshot")
 
 # usage
 ```
