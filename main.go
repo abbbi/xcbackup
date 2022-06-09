@@ -181,7 +181,7 @@ func saveIgc(id string, targetdir string, date string) {
 	igcurl := fmt.Sprintf("https://en.dhv-xc.de/flight/%s/igc", id)
 	igcdata := httpReq(igcurl, json_dumps(""), Method.GET, token)
 	f, _ := os.Create(fmt.Sprintf("%s/%s/%s.igc", targetdir, date, id))
-	logrus.Infof("Saving flight: [%s] to: [%s/%s]", id, targetdir, date)
+	logrus.Infof("Saving flight: [%s] to: [%s/%s/%s.igc]", id, targetdir, date, id)
 	f.Write(igcdata)
 	f.Close()
 	return
