@@ -24,6 +24,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"os"
+	"strconv"
 	"sync"
 
 	"github.com/jessevdk/go-flags"
@@ -42,8 +43,9 @@ type Flights struct {
 }
 
 type FlightInfo struct {
-	ID   string `json:"idflight"`
-	DATE string `json:"FlightDate"`
+	ID      string `json:"idflight"`
+	DATE    string `json:"FlightDate"`
+	TakeOff string `json:"takeofflocation"`
 }
 
 var Api = struct {
@@ -69,6 +71,8 @@ type Options struct {
 	User string `short:"u" long:"user" description:"DHV-XC User name" required:"true"`
 	Pass string `short:"p" long:"pass" description:"DHV-XC User Password" required:"true"`
 	Dir  string `short:"d" long:"dir" description:"Target directory" required:"true"`
+	List bool   `short:"l" long:"list" description:"List flights only, do not download"`
+	ID   int    `short:"i" long:"id" description:"Download flight with specific ID only" default:"0"`
 }
 
 var client http.Client
@@ -175,7 +179,7 @@ func getToken(data jsonLogin) string {
 	return fmt.Sprintf("%v", meta["token"])
 }
 
-func saveIgc(id string, targetdir string, date string) {
+func saveIgc(id string, targetdir string, date string) int {
 	makedir(fmt.Sprintf("%s/%s", targetdir, date))
 
 	igcurl := fmt.Sprintf("https://en.dhv-xc.de/flight/%s/igc", id)
@@ -184,7 +188,7 @@ func saveIgc(id string, targetdir string, date string) {
 	logrus.Infof("Saving flight: [%s] to: [%s/%s/%s.igc]", id, targetdir, date, id)
 	f.Write(igcdata)
 	f.Close()
-	return
+	return 1
 }
 
 func makedir(path string) {
@@ -229,13 +233,29 @@ func main() {
 	bodyp := httpReq(Api.url+Api.flights, json_dumps(data), Method.GET, token)
 	flights := load_flights(bodyp)
 	var wg sync.WaitGroup
+	var saved int = 0
 	for i := 0; i < len(flights.Data); i++ {
+		if options.List {
+			logrus.Infof("Flight ID: [%s] Takeoff: [%s] Date: [%s]",
+				flights.Data[i].ID,
+				flights.Data[i].TakeOff,
+				flights.Data[i].DATE,
+			)
+			continue
+		}
+		has_id, _ := strconv.Atoi(flights.Data[i].ID)
+		if options.ID != 0 && has_id != options.ID {
+			saved += saveIgc(
+				fmt.Sprintf("%d", options.ID), options.Dir, "today",
+			)
+			break
+		}
 		wg.Add(1)
 		go func(id string, date string) {
 			defer wg.Done()
-			saveIgc(id, options.Dir, date)
+			saved += saveIgc(id, options.Dir, date)
 		}(flights.Data[i].ID, flights.Data[i].DATE)
 	}
 	wg.Wait()
-	logrus.Infof("Saved [%d] flights", len(flights.Data))
+	logrus.Infof("Saved [%d] flights", saved)
 }
