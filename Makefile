@@ -1,4 +1,4 @@
-VERSION:=0.1
+VERSION:=0.2
 EXE:=xcbackup
 
 all: windows linux_amd64 release
