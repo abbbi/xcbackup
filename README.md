@@ -26,7 +26,7 @@ Help Options:
 
 List flights (do not download):
 ```
-# xcbackup -u username -p password --dir backup/
+# xcbackup -u username -p password -l --dir backup/
 INFO[0000] Flight ID: [1543836] Takeoff: [Rottach-Egern, Miesbach, Bayern] Date: [2022-06-11]
 INFO[0000] Flight ID: [1541261] Takeoff: [Rottach-Egern, Miesbach, Bayern] Date: [2022-05-26]
 INFO[0000] Flight ID: [1541256] Takeoff: [Rottach-Egern, Miesbach, Bayern] Date: [2022-06-06]
@@ -34,7 +34,7 @@ INFO[0000] Flight ID: [1541256] Takeoff: [Rottach-Egern, Miesbach, Bayern] Date:
 
 Complete backup of all flights:
 ```
-# xcbackup -u username -p password -l --dir backup/
+# xcbackup -u username -p password --dir backup/
 INFO[0003] Saving flight: [1129188] to: [backup/2019-05-24/1129188.igc]
 INFO[0003] Saving flight: [1186753] to: [backup/2019-08-30/1186753.igc]
 INFO[0003] Saved [159] flights
