@@ -6,7 +6,7 @@ from other persons uploaded to DHV-XC.
 
 ![Alt text](screenshot.jpg?raw=true "Screenshot")
 
-# usage
+# Usage
 ```
 Usage:
   xcbackup [OPTIONS]
@@ -22,7 +22,7 @@ Help Options:
   -h, --help  Show this help message
 ```
 
-# examples
+# Examples
 
 Complete backup of all flights:
 
@@ -42,11 +42,11 @@ INFO[0003] Saving flight: [1186753] to: [backup/2019-08-30/1186753.igc]
 INFO[0003] Saved [159] flights
 ```
 
-Download specifc flights either from your profile or a flight
+Download specifc flight either from your profile or a public flight
 uploaded by another person:
 
 ```
-# xcbackup -u username -p password -l -i 1547554 --dir backup/
+# xcbackup -u username -p password  -i 1547554 --dir backup/
 INFO[0000] Saving flight: [1547617] to: [backup/today/1547617.igc] 
 INFO[0000] Saved [1] flights
 ```
